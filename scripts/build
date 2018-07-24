@@ -1,0 +1,5 @@
+mkdir -p "/home/student/Documents/EM-MAGIC/build"
+mkdir -p "/home/student/Documents/EM-MAGIC/build/core"
+mkdir -p "/home/student/Documents/EM-MAGIC/build/libraries"
+g++ -c "/home/student/Documents/EM-MAGIC/src/main.cpp" -std=c++11 -I"/home/student/Documents/EM-MAGIC/headers" -I"/home/student/Documents/EM-MAGIC/headers/core" -I"/home/student/Documents/EM-MAGIC/headers/libraries" -o "/home/student/Documents/EM-MAGIC/build/main.o"
+g++ "/home/student/Documents/EM-MAGIC/build/main.o" "/home/student/Documents/EM-MAGIC/build/libraries/lodepng.o" -std=c++11 -o EM-MAGIC

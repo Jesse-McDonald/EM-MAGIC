@@ -1,0 +1,66 @@
+
+Inputs
+
+-h
+bring up help
+
+-n <IP> <PORT> 
+This machine acts like a node and will connect to port <PORT> on machine <IP>.  Afterwords this machine will accept inputs exclusivly from the server, this includes things like, opperations to perform, file name and location, conversion destination, other flags.  And it will send conformations, errors, and completion to the server.  All other inputs ignored with this option
+
+-s <PORT>
+this machine will act like a host server using port <PORT>, genneraly this machine will not do any actual processing, but it will facilitate communitcation and coordination with the other nodes.  It will forward almost all the inputs it is given, including stack location, conversion destination, conversion opperations, and will accept errors and similar from the nodes.  All output will be displayed from this node.  
+
+-v 
+verbose mode, enables extra information to be sent, when used in node mode, the node will also display errors, when used in server mode, nodes are asked for more errors (only displayed on server unless node is in -v) and additional network information is displayed
+
+-f 
+when used in combination with -s, this opperator forces the server to schedule its self in the processing rotation, the server will still prioritize empty nodes, but if each node is working, the server will work on the next problem
+
+-i <DIR> 
+path to the directory containing the stack, all files in that directory must have the same extension or an error will be thrown.
+
+-o <DIR>
+path to the directory for the converted stack.  Directory may not exist, if it does not it will be created, directory should be empty, if not the user will be prompted for overwrite confirmation, if confirmation is granted the dir is checked for files not matching the conversion extension, if any are found, the user will be asked to confirm that the files are not important and can be deleted, the user will then be asked to confirm the deleation of the files.
+
+-c <OUTPUT>
+specifies the program to convert the input files to files of type <OUTPUT>, if not specified, the files will not be converted if possible, if not possible, the files will be converted to .png and any recoverable metadata will be saved in a .data file in with the stack
+
+-l <RANGE>
+specifies to preform landmark alignment in addition to other opperations, the image will be shifted up to <RANGE> pixles from starting location, if range is not specified, the images are shifted to the best alignment for the entire image (slow), the image border will be filled with black pixels to offset the image to the correct place, and the shift will be noted in the .data file
+
+-sm
+use smart range and range extrapolation while doing landmark alignment (ie start at last shift, look for linear shifts, limit range)
+
+-he
+use heruistics while aligning to speed up (ie dont find the "Best" range, find the first close range, or use gready search to find the best local alignemnt rather than considering the entire range)
+ 
+-sd
+detect and warn about places in the image where a splice was likely miss done
+
+-sc
+attempt to repair splices and discard malformed data, impilies -sd
+
+-se
+attempt to extrapolate data in spliced region, implies -sc
+
+-eb
+when an correctable error in the image is detected branch segmentation and prompt user to select correct branch, if not specified the program will correct the error and continue segmentation within that branch.  the program will always branch on an uncorectable error
+
+-es
+enable experimental diagonal splice detection
+
+-fix [LEVEL]
+this will put the program in to fix mode [LEVEL] is optional, but specifies how much to scan for, <DIR> will be scanned
+	level 0- default, scan .data file for any previously detected errors the require user input and prompt user for decision
+	Level 1- preform level 0, and scan black buffer of each image, compair to alignment data and correct if neccessarry
+	Level 2+ - check alignemnt with nearby reagions in a range that scales linearly (L2 check neighoring pixels, L3 check up to 2 pixels out, etc)
+when ran with -sd -sc or -se additional scans will be ran to detect undetected spices
+if -o is specified the files will be coppied after fix, if not they will replace the existing directory
+
+when ran in server mode these inputs will be communicated to each node, then the stack will split into individual sequential image pares, each node will be given two pares of images and any heruristic data to process, at any time new heuristic data can be sent to the nodes.  once a node finishes with a pare it sends a reply to the server which asignes it a new pare emediatly, this way the node always has a task in queue.  All changes are noted down in the .data file, then commited once the entire stack has been analysed 
+
+When ran in node mode, most other inputs are ignored and communication is establised with the server, once in communication all errors will be fed through the network to the server for display rather than displaying localy (unless -v), instructions from the server will be followed by the node, and the node will notifiy the server upon completion of each task,
+if a node goes off line for whatever reason the server should detect it and rebalance the incomplete jobs.
+
+when ran in neither node nor server mode all opperations are done by the same machine in the same way as if the machine was both a server and a node, no network communication is attempted
+
