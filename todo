@@ -1,0 +1,17 @@
+create storage object for layer and shift
+	contains shift,splice count, splices
+meta extractor
+meta fusor
+create landmark aligner
+	saves data in storage object
+create shift applier
+	uses storage object to apply shifts
+splice applier
+	uses storage object to apply splices
+
+network communication
+	s/r storage objects
+	s/r function calls/args
+	s/r status
+	s/r cmd output
+
