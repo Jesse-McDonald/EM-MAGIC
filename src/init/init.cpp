@@ -15,14 +15,7 @@ int startProcessing(){
 		return startNode();
 	}else{
 		//rough program flow, flesh out later		
-		getStack();
-		for(...){	
-			detect splices
-			correct splices
-			if corrected:
-				branch
-			align			
-		}
+	
 	}
 }
 
